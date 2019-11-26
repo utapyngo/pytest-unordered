@@ -42,3 +42,16 @@ def test_unordered_non_sized_actual(value):
 ])
 def test_compare_eq_unordered(left, right, extra_left, extra_right):
     assert _compare_eq_unordered(left, right) == (extra_left, extra_right)
+
+
+def test_fail_nonunique(testdir):
+    testdir.makepyfile(
+        """
+        from pytest_unordered import unordered
+
+        def test_unordered():
+            assert unordered([1, 2, 3, 3]) == [1, 2, 3]
+    """
+    )
+    result = testdir.runpytest()
+    result.assert_outcomes(failed=1, passed=0)
