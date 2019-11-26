@@ -24,7 +24,7 @@ setup(
     description="Test equality of unordered sequences of unhashable items",
     long_description=read("README.md"),
     py_modules=["pytest_unordered"],
-    install_requires=["pytest>=4.0.0",],
+    install_requires=["pytest>=4.0.0"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Pytest",
