@@ -42,7 +42,11 @@ def test_compare_eq_unordered(left, right, extra_left, extra_right):
     assert _compare_eq_unordered(left, right) == (extra_left, extra_right)
 
 
-def test_fail_nonunique(testdir):
+def test_len():
+    assert len(unordered([{1: ["a", "b"]}, 2, 3, 4, 5])) == 5
+
+
+def test_fail_nonunique_left(testdir):
     testdir.makepyfile(
         """
         from pytest_unordered import unordered
@@ -53,3 +57,24 @@ def test_fail_nonunique(testdir):
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
+    result.stdout.fnmatch_lines([
+        'E         Extra items in the left sequence:',
+        'E         3',
+    ])
+
+
+def test_fail_nonunique_right(testdir):
+    testdir.makepyfile(
+        """
+        from pytest_unordered import unordered
+
+        def test_unordered():
+            assert [1, 2, 3] == unordered([1, 2, 3, 3])
+    """
+    )
+    result = testdir.runpytest()
+    result.assert_outcomes(failed=1, passed=0)
+    result.stdout.fnmatch_lines([
+        'E         Extra items in the right sequence:',
+        'E         3'
+    ])
