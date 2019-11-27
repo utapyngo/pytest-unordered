@@ -1,20 +1,21 @@
-from typing import Sized
+from typing import Iterable
+from typing import Sequence
 
 from _pytest._io.saferepr import saferepr
 
 
 class Unordered:
-    def __init__(self, expected):
-        if not isinstance(expected, Sized):
+    def __init__(self, expected: Sequence):
+        if not isinstance(expected, Sequence):
             raise TypeError(
-                "cannot make unordered comparisons to non-sized values: {!r}".format(
+                "cannot make unordered comparisons to non-collections: {!r}".format(
                     expected
                 )
             )
         self.expected = expected
 
-    def __eq__(self, actual):
-        if not isinstance(actual, Sized):
+    def __eq__(self, actual: Sequence):
+        if not isinstance(actual, Sequence):
             return self.expected == actual
         if len(actual) != len(self.expected):
             return False
@@ -31,11 +32,11 @@ class Unordered:
         return iter(self.expected)
 
 
-def unordered(expected):
+def unordered(expected: Sequence):
     return Unordered(expected)
 
 
-def _compare_eq_unordered(left, right):
+def _compare_eq_unordered(left: Iterable, right: Iterable):
     extra_left = []
     extra_right = list(right)
     for elem in left:

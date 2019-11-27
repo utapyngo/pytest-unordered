@@ -1,6 +1,6 @@
 # pytest-unordered
 
-Test equality of unordered sequences of unhashable items.
+Test equality of unordered collections in pytest.
 
 ## Installation
 
