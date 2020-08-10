@@ -15,7 +15,7 @@ class UnorderedList(list):
             )
         super().__init__(expected)
 
-    def __eq__(self, actual: Sequence):
+    def __eq__(self, actual: Sequence) -> bool:
         if not isinstance(actual, Sequence):
             return self.copy() == actual
         if len(actual) != len(self):

@@ -20,14 +20,15 @@ def test_unordered(left, right):
 
 
 @pytest.mark.parametrize("value", [None, type, TypeError])
-def test_unordered_non_sized_expected(value):
+def test_non_sized_expected(value):
     with raises(TypeError):
         UnorderedList(value)
 
 
 @pytest.mark.parametrize("value", [None, type, TypeError])
-def test_unordered_non_sized_actual(value):
-    assert unordered() != value
+def test_compare_to_non_sequence(value):
+    assert not unordered("x") == value
+    assert unordered("x") != value
 
 
 @pytest.mark.parametrize(
