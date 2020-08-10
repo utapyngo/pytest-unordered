@@ -5,10 +5,11 @@ python:
     - "3.6"
     - "3.7"
     - "3.8"
+    - "3.9-dev"
     - "pypy3"
 install:
     - pip install tox-travis
     - pip install coveralls
 script: tox
 env:
-    - COVERALLS_SERVICE_NAME=travis-ci POST_COMMAND=coveralls
+    - POST_COMMAND=coveralls
