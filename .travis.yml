@@ -11,5 +11,4 @@ install:
     - pip install coveralls
 script: tox
 env:
-    - COVERALLS_SERVICE_NAME=travis-ci
-    - POST_COMMAND=coveralls
+    - COVERALLS_SERVICE_NAME=travis-ci POST_COMMAND=coveralls
