@@ -48,11 +48,6 @@ def test_len():
     assert len(unordered({1: ["a", "b"]}, 2, 3, 4, 5)) == 5
 
 
-def test_in():
-    assert "a" in unordered("a", "b", "c")
-    assert "d" not in unordered("a", "b", "c")
-
-
 def test_fail_nonunique_left(testdir):
     testdir.makepyfile(
         """
@@ -104,4 +99,21 @@ def test_replace(testdir):
         "E         Differing items:",
         "E         {'a': 1} != {'a': 3}",
         "E         Use -v to get the full diff",
+    ])
+
+
+def test_in(testdir):
+    testdir.makepyfile(
+        """
+        from pytest_unordered import unordered
+
+        def test_unordered():
+            assert 1 in unordered(2, 3)
+    """
+    )
+    result = testdir.runpytest()
+    result.assert_outcomes(failed=1, passed=0)
+    result.stdout.fnmatch_lines([
+        "E       assert 1 in [2, 3]",
+        "E        +  where [2, 3] = unordered(2, 3)",
     ])
