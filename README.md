@@ -15,4 +15,4 @@ Test equality of unordered collections in pytest.
     from pytest_unordered import unordered
     
     def test_unordered():
-        assert [3, 2, {1: ['a', 'b']}] == unordered({1: ['a', 'b']}, 2, 3)
+        assert [3, 2, {1: ['b', 'a']}] == unordered({1: unordered('a', 'b')}, 2, 3)

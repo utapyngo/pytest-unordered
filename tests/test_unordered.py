@@ -12,7 +12,7 @@ from pytest_unordered import unordered
         (unordered(1, 2, 3), [3, 2, 1]),
         ([3, 2, 1], unordered(1, 2, 3)),
         (unordered(1, 2, {"a": unordered(4, 5, 6)}), [{"a": [6, 5, 4]}, 2, 1]),
-        ([3, 2, {1: ["a", "b"]}], unordered({1: ["a", "b"]}, 2, 3)),
+        ([3, 2, {1: ['b', 'a']}], unordered({1: unordered('a', 'b')}, 2, 3)),
     ],
 )
 def test_unordered(left, right):
