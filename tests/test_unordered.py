@@ -1,6 +1,7 @@
 import pytest
 from pytest import raises
 
+from pytest_unordered import UnorderedList
 from pytest_unordered import _compare_eq_unordered
 from pytest_unordered import unordered
 
@@ -8,10 +9,10 @@ from pytest_unordered import unordered
 @pytest.mark.parametrize(
     "left,right",
     [
-        (unordered([1, 2, 3]), [3, 2, 1]),
-        ([3, 2, 1], unordered([1, 2, 3])),
-        (unordered([1, 2, {"a": unordered([4, 5, 6])}]), [{"a": [6, 5, 4]}, 2, 1]),
-        ([3, 2, {1: ["a", "b"]}], unordered([{1: ["a", "b"]}, 2, 3])),
+        (unordered(1, 2, 3), [3, 2, 1]),
+        ([3, 2, 1], unordered(1, 2, 3)),
+        (unordered(1, 2, {"a": unordered(4, 5, 6)}), [{"a": [6, 5, 4]}, 2, 1]),
+        ([3, 2, {1: ["a", "b"]}], unordered({1: ["a", "b"]}, 2, 3)),
     ],
 )
 def test_unordered(left, right):
@@ -21,12 +22,12 @@ def test_unordered(left, right):
 @pytest.mark.parametrize("value", [None, type, TypeError])
 def test_unordered_non_sized_expected(value):
     with raises(TypeError):
-        unordered(value)
+        UnorderedList(value)
 
 
 @pytest.mark.parametrize("value", [None, type, TypeError])
 def test_unordered_non_sized_actual(value):
-    assert unordered([]) != value
+    assert unordered() != value
 
 
 @pytest.mark.parametrize(
@@ -35,7 +36,7 @@ def test_unordered_non_sized_actual(value):
         ([1, 2, 3], [1, 2, 3, 4, 5], [], [4, 5]),
         ([3, 2, 1], [1, 2, 3, 4, 5], [], [4, 5]),
         ([3, 2, {1: ["a", "b"]}], [{1: ["a", "b"]}, 2, 3, 4, 5], [], [4, 5]),
-        ([3, 2, {1: ["a", "b"]}], [{1: unordered(["b", "a"])}, 2, 3, 4, 5], [], [4, 5]),
+        ([3, 2, {1: ["a", "b"]}], [{1: unordered("b", "a")}, 2, 3, 4, 5], [], [4, 5]),
     ],
 )
 def test_compare_eq_unordered(left, right, extra_left, extra_right):
@@ -43,7 +44,12 @@ def test_compare_eq_unordered(left, right, extra_left, extra_right):
 
 
 def test_len():
-    assert len(unordered([{1: ["a", "b"]}, 2, 3, 4, 5])) == 5
+    assert len(unordered({1: ["a", "b"]}, 2, 3, 4, 5)) == 5
+
+
+def test_in():
+    assert "a" in unordered("a", "b", "c")
+    assert "d" not in unordered("a", "b", "c")
 
 
 def test_fail_nonunique_left(testdir):
@@ -52,14 +58,14 @@ def test_fail_nonunique_left(testdir):
         from pytest_unordered import unordered
 
         def test_unordered():
-            assert unordered([1, 2, 3, 3]) == [1, 2, 3]
+            assert unordered(1, 2, 3, 3) == [1, 2, 3]
     """
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
     result.stdout.fnmatch_lines([
-        'E         Extra items in the left sequence:',
-        'E         3',
+        "E         Extra items in the left sequence:",
+        "E         3",
     ])
 
 
@@ -69,12 +75,32 @@ def test_fail_nonunique_right(testdir):
         from pytest_unordered import unordered
 
         def test_unordered():
-            assert [1, 2, 3] == unordered([1, 2, 3, 3])
+            assert [1, 2, 3] == unordered(1, 2, 3, 3)
     """
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
     result.stdout.fnmatch_lines([
-        'E         Extra items in the right sequence:',
-        'E         3'
+        "E         Extra items in the right sequence:",
+        "E         3"
+    ])
+
+
+def test_replace(testdir):
+    testdir.makepyfile(
+        """
+        from pytest_unordered import unordered
+
+        def test_unordered():
+            assert [{"a": 1, "b": 2}, 2, 3] == unordered(2, 3, {"b": 2, "a": 3})
+    """
+    )
+    result = testdir.runpytest()
+    result.assert_outcomes(failed=1, passed=0)
+    result.stdout.fnmatch_lines([
+        "E         One item replaced:",
+        "E         Omitting 1 identical items, use -vv to show",
+        "E         Differing items:",
+        "E         {'a': 1} != {'a': 3}",
+        "E         Use -v to get the full diff",
     ])
