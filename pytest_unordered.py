@@ -9,9 +9,7 @@ class UnorderedList(list):
     def __init__(self, expected: Sequence):
         if not isinstance(expected, Sequence):
             raise TypeError(
-                "cannot make unordered comparisons to non-collections: {!r}".format(
-                    expected
-                )
+                "cannot make unordered comparisons to non-collections: {!r}".format(expected)
             )
         super().__init__(expected)
 
@@ -41,13 +39,13 @@ def _compare_eq_unordered(left: Iterable, right: Iterable):
 
 def pytest_assertrepr_compare(config, op, left, right):
     if (isinstance(left, UnorderedList) or isinstance(right, UnorderedList)) and op == "==":
-        verbose = config.getoption('verbose')
+        verbose = config.getoption("verbose")
         left_repr = saferepr(left)
         right_repr = saferepr(right)
         result = ["{} {} {}".format(left_repr, op, right_repr)]
         extra_left, extra_right = _compare_eq_unordered(left, right)
         if len(extra_left) == 1 and len(extra_right) == 1:
-            result.append('One item replaced:')
+            result.append("One item replaced:")
             result.extend(_compare_eq_any(extra_left[0], extra_right[0], verbose))
         else:
             if extra_left:
