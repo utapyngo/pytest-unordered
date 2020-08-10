@@ -55,7 +55,7 @@ def test_fail_nonunique_left(testdir):
 
         def test_unordered():
             assert unordered(1, 2, 3, 3) == [1, 2, 3]
-    """
+        """
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
@@ -72,7 +72,7 @@ def test_fail_nonunique_right(testdir):
 
         def test_unordered():
             assert [1, 2, 3] == unordered(1, 2, 3, 3)
-    """
+        """
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
@@ -89,7 +89,7 @@ def test_replace(testdir):
 
         def test_unordered():
             assert [{"a": 1, "b": 2}, 2, 3] == unordered(2, 3, {"b": 2, "a": 3})
-    """
+        """
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
@@ -109,7 +109,7 @@ def test_in(testdir):
 
         def test_unordered():
             assert 1 in unordered(2, 3)
-    """
+        """
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
