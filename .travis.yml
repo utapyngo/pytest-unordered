@@ -9,7 +9,7 @@ python:
     - "pypy3"
 install:
     - pip install tox-travis
-    - pip install coveralls
+    - pip install codecov
 script: tox
 env:
-    - POST_COMMAND=coveralls
+    - POST_COMMAND=codecov
