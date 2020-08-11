@@ -1,7 +1,7 @@
 # pytest-unordered
 
 [![Build Status](https://travis-ci.org/utapyngo/pytest-unordered.svg?branch=master)](https://travis-ci.org/utapyngo/pytest-unordered)
-[![Coverage Status]([![codecov](https://codecov.io/gh/utapyngo/pytest-unordered/branch/master/graph/badge.svg)](https://codecov.io/gh/utapyngo/pytest-unordered))
+[![Coverage Status](https://codecov.io/gh/utapyngo/pytest-unordered/branch/master/graph/badge.svg)](https://codecov.io/gh/utapyngo/pytest-unordered)
 
 Test equality of unordered collections in pytest.
 
