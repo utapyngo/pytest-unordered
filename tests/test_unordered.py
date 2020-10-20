@@ -13,6 +13,7 @@ from pytest_unordered import unordered
         ([3, 2, 1], unordered(1, 2, 3)),
         (unordered(1, 2, {"a": unordered(4, 5, 6)}), [{"a": [6, 5, 4]}, 2, 1]),
         ([3, 2, {1: ['b', 'a']}], unordered({1: unordered('a', 'b')}, 2, 3)),
+        (unordered(x for x in range(3)), [2, 1, 0])
     ],
 )
 def test_unordered(left, right):
