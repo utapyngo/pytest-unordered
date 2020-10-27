@@ -7,18 +7,83 @@ from pytest_unordered import unordered
 
 
 @pytest.mark.parametrize(
-    "left,right",
+    ["expected", "actual"],
     [
         (unordered(1, 2, 3), [3, 2, 1]),
-        ([3, 2, 1], unordered(1, 2, 3)),
+        (unordered(1, 2, 3), (3, 2, 1)),
+        (unordered(1, 2, 3), {3, 2, 1}),
+        (unordered([1, 2, 3]), [3, 2, 1]),
+        (unordered((1, 2, 3)), (3, 2, 1)),
+        (unordered({1, 2, 3}), {3, 2, 1}),
+        (unordered({1: 2, 3: 4}), {3: 4, 1: 2}),
         (unordered(1, 2, {"a": unordered(4, 5, 6)}), [{"a": [6, 5, 4]}, 2, 1]),
-        ([3, 2, {1: ['b', 'a']}], unordered({1: unordered('a', 'b')}, 2, 3)),
+        (unordered([{1: unordered(['a', 'b'])}, 2, 3]), [3, 2, {1: ['b', 'a']}]),
         (unordered(x for x in range(3)), [2, 1, 0]),
-        ((x for x in range(3)), unordered(2, 1, 0)),
+        (unordered(x for x in range(3)), (2, 1, 0)),
+        (unordered(x for x in range(3)), {2, 1, 0}),
+        (unordered(x for x in range(3)), range(3)),
+        (unordered("abc"), "bac"),
+        (unordered("a", "b", "c"), ["b", "a", "c"]),
+        (unordered("a", "b", "c"), "bac"),
     ],
 )
-def test_unordered(left, right):
+def test_unordered(expected, actual):
+    assert expected == actual
+    assert actual == expected
+    with pytest.raises(AssertionError):
+        assert expected != actual
+    with pytest.raises(AssertionError):
+        assert actual != expected
+
+
+@pytest.mark.parametrize(
+    ["left", "right"],
+    [
+        (unordered(2, 1, 0), (x for x in range(3))),
+        ((x for x in range(3)), unordered(2, 1, 0)),
+        (unordered(x for x in range(3)), (2, 1, 0),),
+        ((2, 1, 0), unordered(x for x in range(3))),
+        (unordered("a", "b", "c"), (x for x in "bac")),
+        ((x for x in "bac"), unordered("a", "b", "c")),
+    ]
+)
+def test_unordered_generators(left, right):
+    # Because general generators can only be consumed once,
+    # we can only do one assert
     assert left == right
+
+
+@pytest.mark.parametrize(
+    ["expected", "actual"],
+    [
+        (unordered([1, 2, 3]), [1, 2, 3, 4]),
+        (unordered([1, 2, 3]), [1, 2, 3, 1]),
+        (unordered([1, 2, 3]), (1, 2, 3)),
+        (unordered([1, 2, 3]), {1, 2, 3}),
+        (unordered([1, 2, 3]), (x + 1 for x in range(3))),
+        (unordered((1, 2, 3)), (1, 2, 3, 4)),
+        (unordered((1, 2, 3)), (1, 2, 3, 1)),
+        (unordered((1, 2, 3)), [1, 2, 3]),
+        (unordered((1, 2, 3)), {1, 2, 3}),
+        (unordered((1, 2, 3)), (x + 1 for x in range(3))),
+        (unordered({1, 2, 3}), {1, 2, 3, 4}),
+        (unordered({1, 2, 3}), [1, 2, 3]),
+        (unordered({1, 2, 3}), (1, 2, 3)),
+        (unordered({1, 2, 3}), (x + 1 for x in range(3))),
+        (unordered("abc"), ["b", "a", "c"]),
+        (unordered("abc"), ("b", "a", "c")),
+        (unordered("abc"), {"b", "a", "c"}),
+    ],
+)
+def test_unordered_reject(expected, actual):
+    assert not expected == actual
+    assert expected != actual
+    assert not actual == expected
+    assert actual != expected
+    with raises(AssertionError):
+        assert expected == actual
+    with raises(AssertionError):
+        assert actual == expected
 
 
 @pytest.mark.parametrize("value", [None, type, TypeError])
@@ -118,4 +183,21 @@ def test_in(testdir):
     result.stdout.fnmatch_lines([
         "E       assert 1 in [2, 3]",
         "E        +  where [2, 3] = unordered(2, 3)",
+    ])
+
+
+def test_type_check(testdir):
+    testdir.makepyfile(
+        """
+        from pytest_unordered import unordered
+
+        def test_unordered():
+            assert [3, 2, 1] == unordered((1, 2, 3))
+        """
+    )
+    result = testdir.runpytest()
+    result.assert_outcomes(failed=1, passed=0)
+    result.stdout.fnmatch_lines([
+        "E         Type mismatch:",
+        "E         <class 'list'> != <class 'tuple'>",
     ])
