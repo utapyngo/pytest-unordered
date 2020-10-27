@@ -28,7 +28,7 @@ class UnorderedList(list):
         return not extra_left and not extra_right
 
     def __ne__(self, actual: Iterable) -> bool:
-        return not self.__eq__(actual)
+        return not (self == actual)
 
 
 def unordered(*args) -> UnorderedList:
