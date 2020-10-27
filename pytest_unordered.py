@@ -16,7 +16,7 @@ class UnorderedList(list):
         self._expected_type = type(expected) if check_type else None
 
     def __eq__(self, actual: Iterable) -> bool:
-        if self._expected_type and self._expected_type != type(actual):
+        if self._expected_type is not None and self._expected_type != type(actual):
             return False
         if not isinstance(actual, Iterable):
             return self.copy() == actual
@@ -58,7 +58,7 @@ def pytest_assertrepr_compare(config, op, left, right):
         right_type = right._expected_type if isinstance(right, UnorderedList) else type(right)
         if left_type and right_type and left_type != right_type:
             result.append("Type mismatch:")
-            result.append("{l} != {r}".format(l=left_type, r=right_type))
+            result.append("{} != {}".format(left_type, right_type))
         extra_left, extra_right = _compare_eq_unordered(left, right)
         if len(extra_left) == 1 and len(extra_right) == 1:
             result.append("One item replaced:")

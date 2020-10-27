@@ -30,10 +30,8 @@ from pytest_unordered import unordered
 def test_unordered(expected, actual):
     assert expected == actual
     assert actual == expected
-    with pytest.raises(AssertionError):
-        assert expected != actual
-    with pytest.raises(AssertionError):
-        assert actual != expected
+    assert not (expected != actual)
+    assert not (actual != expected)
 
 
 @pytest.mark.parametrize(
@@ -76,14 +74,10 @@ def test_unordered_generators(left, right):
     ],
 )
 def test_unordered_reject(expected, actual):
-    assert not expected == actual
     assert expected != actual
-    assert not actual == expected
     assert actual != expected
-    with raises(AssertionError):
-        assert expected == actual
-    with raises(AssertionError):
-        assert actual == expected
+    assert not (expected == actual)
+    assert not (actual == expected)
 
 
 @pytest.mark.parametrize("value", [None, type, TypeError])
