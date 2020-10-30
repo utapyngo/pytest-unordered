@@ -1,3 +1,5 @@
+import collections
+
 import pytest
 from pytest import raises
 
@@ -15,7 +17,6 @@ from pytest_unordered import unordered
         (unordered([1, 2, 3]), [3, 2, 1]),
         (unordered((1, 2, 3)), (3, 2, 1)),
         (unordered({1, 2, 3}), {3, 2, 1}),
-        (unordered({1: 2, 3: 4}), {3: 4, 1: 2}),
         (unordered(1, 2, {"a": unordered(4, 5, 6)}), [{"a": [6, 5, 4]}, 2, 1]),
         (unordered([{1: unordered(['a', 'b'])}, 2, 3]), [3, 2, {1: ['b', 'a']}]),
         (unordered(x for x in range(3)), [2, 1, 0]),
@@ -80,10 +81,21 @@ def test_unordered_reject(expected, actual):
     assert not (actual == expected)
 
 
-@pytest.mark.parametrize("value", [None, type, TypeError])
+@pytest.mark.parametrize("value", [None, True, 42, object(), type, TypeError])
 def test_non_sized_expected(value):
-    with raises(TypeError):
+    with raises(TypeError, match="cannot make unordered comparisons to non-iterable"):
         UnorderedList(value)
+
+
+@pytest.mark.parametrize("value", [
+    {1: 2, 3: 4},
+    collections.defaultdict(int, a=5),
+    collections.OrderedDict({1: 2, 3: 4}),
+    collections.Counter("count this")
+])
+def test_mapping_expected(value):
+    with raises(TypeError, match="cannot make unordered comparisons to mapping"):
+        unordered(value)
 
 
 @pytest.mark.parametrize("value", [None, type, TypeError])

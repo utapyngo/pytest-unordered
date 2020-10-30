@@ -1,5 +1,5 @@
 from typing import Generator
-from typing import Iterable
+from typing import Iterable, Mapping
 from typing import Sized
 
 from _pytest._io.saferepr import saferepr
@@ -11,6 +11,10 @@ class UnorderedList(list):
         if not isinstance(expected, Iterable):
             raise TypeError(
                 "cannot make unordered comparisons to non-iterable: {!r}".format(expected)
+            )
+        if isinstance(expected, Mapping):
+            raise TypeError(
+                "cannot make unordered comparisons to mapping: {!r}".format(expected)
             )
         super().__init__(expected)
         self._expected_type = type(expected) if check_type else None
