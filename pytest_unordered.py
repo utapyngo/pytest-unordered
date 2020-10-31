@@ -7,7 +7,7 @@ from _pytest.assertion.util import _compare_eq_any
 
 
 class UnorderedList(list):
-    def __init__(self, expected: Iterable, check_type: bool=True):
+    def __init__(self, expected: Iterable, check_type: bool = True):
         if not isinstance(expected, Iterable):
             raise TypeError(
                 "cannot make unordered comparisons to non-iterable: {!r}".format(expected)
