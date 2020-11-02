@@ -14,7 +14,7 @@ def read(fname):
 
 setup(
     name="pytest-unordered",
-    version="0.3.0",
+    version="0.4.0",
     author="Ivan Zaikin",
     author_email="ut@pyngo.tom.ru",
     maintainer="Ivan Zaikin",
@@ -41,6 +41,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Testing",
         "Topic :: Software Development :: Quality Assurance",

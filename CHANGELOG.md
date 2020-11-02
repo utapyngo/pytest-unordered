@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.0] - 2020-11-02
+- Add sequence type check when using `unordered` with single argument
+
+
 ## [0.3.0] - 2020-10-20
 - Allow passing a generator to unordered()
 
