@@ -87,6 +87,12 @@ def test_non_sized_expected(value):
         UnorderedList(value)
 
 
+@pytest.mark.parametrize("value", [None, True, 42, object(), type, TypeError])
+def test_non_iterable_actual(value):
+    assert not (unordered(1, 2, 3) == value)
+    assert not (value == unordered(1, 2, 3))
+
+
 @pytest.mark.parametrize("value", [
     {1: 2, 3: 4},
     collections.defaultdict(int, a=5),
