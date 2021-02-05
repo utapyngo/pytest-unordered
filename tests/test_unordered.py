@@ -110,6 +110,12 @@ def test_compare_to_non_sequence(value):
     assert unordered("x") != value
 
 
+def test_check_type():
+    assert not unordered([1]) == {1}
+    assert not unordered([1], check_type=True) == {1}
+    assert unordered([1], check_type=False) == {1}
+
+
 @pytest.mark.parametrize(
     "left,right,extra_left,extra_right",
     [
