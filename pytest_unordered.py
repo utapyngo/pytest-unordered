@@ -1,5 +1,6 @@
 from typing import Generator
 from typing import Iterable, Mapping
+from typing import Optional
 from typing import Sized
 
 from _pytest._io.saferepr import saferepr
@@ -35,9 +36,11 @@ class UnorderedList(list):
         return not (self == actual)
 
 
-def unordered(*args) -> UnorderedList:
+def unordered(*args, check_type: Optional[bool] = None) -> UnorderedList:
     if len(args) == 1:
-        return UnorderedList(args[0], check_type=not isinstance(args[0], Generator))
+        if check_type is None:
+            check_type = not isinstance(args[0], Generator)
+        return UnorderedList(args[0], check_type=check_type)
     return UnorderedList(args, check_type=False)
 
 
