@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.4.1] - 2021-02-06
+## [0.4.1] - 2021-03-28
 - Add `check_type` argument to make it possible to disable type checking for single non-generators positional argument
 
 
