@@ -47,8 +47,18 @@ By default, the container type has to match too:
 ### Nesting
 
 A seasoned developer will notice that the simple use cases above
-can easily be addressed with appropriate usage
-of builtins like `set`, `sorted` and `isinstance`.
+can also be addressed with appropriate usage
+of builtins like `set()`, `sorted()`, `isinstance()`, `repr()`, etc,
+but these solutions scale badly (in terms of boilerplate code)
+with the complexity of your data structures.
+For example: naively implementing order ignoring comparison
+with `set()` or `sorted()` does not work with lists of dictionaries
+because dictionaries are not hashable or sortable.
+`unordered()` supports this out of the box however:
+
+    assert [{"bb": 20}, {"a": 1}] == unordered([{"a": 1}, {"bb": 20}])  # Pass
+
+
 The true value of `unordered()` lies in the fact that you
 can apply it inside large nested data structures to skip order checking
 only in desired places with surgical precision
