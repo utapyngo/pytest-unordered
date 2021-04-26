@@ -47,7 +47,7 @@ By default, the container type has to match too:
 ### Nesting
 
 A seasoned developer will notice that the simple use cases above
-can be easily be addressed with appropriate usage
+can easily be addressed with appropriate usage
 of builtins like `set`, `sorted` and `isinstance`.
 The true value of `unordered()` lies in the fact that you
 can apply it inside large nested data structures to skip order checking
