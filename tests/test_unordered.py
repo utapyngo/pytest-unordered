@@ -183,7 +183,6 @@ def test_replace(testdir):
         "E         Omitting 1 identical items, use -vv to show",
         "E         Differing items:",
         "E         {'a': 1} != {'a': 3}",
-        "E         Use -v to get the full diff",
     ])
 
 
