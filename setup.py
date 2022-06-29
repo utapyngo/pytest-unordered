@@ -25,6 +25,7 @@ setup(
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     py_modules=["pytest_unordered"],
+    package_data={"pytest_unordered": ["py.typed"]},
     install_requires=["pytest>=6.0.0"],
     classifiers=[
         "Development Status :: 4 - Beta",
