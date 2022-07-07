@@ -16,7 +16,7 @@ jobs:
     - name: Install black
       run: python -m pip install black
     - name: black
-      run: black pytest_unordered.py setup.py tests --check --diff
+      run: black pytest_unordered/ setup.py tests --check --diff
 
   flake8:
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
     - name: Install flake8
       run: python -m pip install flake8
     - name: flake8
-      run: flake8 pytest_unordered.py setup.py tests
+      run: flake8 pytest_unordered/ setup.py tests
 
   mypy:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
     - name: Install dependencies
       run: python -m pip install mypy types-setuptools .
     - name: mypy
-      run: mypy pytest_unordered.py setup.py tests
+      run: mypy pytest_unordered/ setup.py tests
 
   test:
     strategy:
