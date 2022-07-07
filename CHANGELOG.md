@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.0] - 2022-07-07
+- Drop Python 3.6 support
+- Improve type hints
+- Add `py.typed` so type checkers can use the type hints
+
+
 ## [0.4.1] - 2021-03-28
 - Add `check_type` argument to make it possible to disable type checking for single non-generators positional argument
 
