@@ -24,7 +24,7 @@ setup(
     description="Test equality of unordered collections in pytest",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
-    py_modules=["pytest_unordered"],
+    packages=["pytest_unordered"],
     package_data={"pytest_unordered": ["py.typed"]},
     install_requires=["pytest>=6.0.0"],
     classifiers=[
