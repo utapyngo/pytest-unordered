@@ -5,6 +5,45 @@ on:
   - pull_request
 
 jobs:
+  black:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install black
+      run: python -m pip install black
+    - name: black
+      run: black pytest_unordered.py setup.py tests --check --diff
+
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install flake8
+      run: python -m pip install flake8
+    - name: flake8
+      run: flake8 pytest_unordered.py setup.py tests
+
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: python -m pip install mypy .
+    - name: mypy
+      run: mypy pytest_unordered.py
+
   test:
     strategy:
       fail-fast: false

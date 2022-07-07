@@ -18,7 +18,7 @@ from pytest_unordered import unordered
         (unordered((1, 2, 3)), (3, 2, 1)),
         (unordered({1, 2, 3}), {3, 2, 1}),
         (unordered(1, 2, {"a": unordered(4, 5, 6)}), [{"a": [6, 5, 4]}, 2, 1]),
-        (unordered([{1: unordered(['a', 'b'])}, 2, 3]), [3, 2, {1: ['b', 'a']}]),
+        (unordered([{1: unordered(["a", "b"])}, 2, 3]), [3, 2, {1: ["b", "a"]}]),
         (unordered(x for x in range(3)), [2, 1, 0]),
         (unordered(x for x in range(3)), (2, 1, 0)),
         (unordered(x for x in range(3)), {2, 1, 0}),
@@ -40,11 +40,11 @@ def test_unordered(expected, actual):
     [
         (unordered(2, 1, 0), (x for x in range(3))),
         ((x for x in range(3)), unordered(2, 1, 0)),
-        (unordered(x for x in range(3)), (2, 1, 0),),
+        (unordered(x for x in range(3)), (2, 1, 0)),
         ((2, 1, 0), unordered(x for x in range(3))),
         (unordered("a", "b", "c"), (x for x in "bac")),
         ((x for x in "bac"), unordered("a", "b", "c")),
-    ]
+    ],
 )
 def test_unordered_generators(left, right):
     # Because general generators can only be consumed once,
@@ -93,12 +93,15 @@ def test_non_iterable_actual(value):
     assert not (value == unordered(1, 2, 3))
 
 
-@pytest.mark.parametrize("value", [
-    {1: 2, 3: 4},
-    collections.defaultdict(int, a=5),
-    collections.OrderedDict({1: 2, 3: 4}),
-    collections.Counter("count this")
-])
+@pytest.mark.parametrize(
+    "value",
+    [
+        {1: 2, 3: 4},
+        collections.defaultdict(int, a=5),
+        collections.OrderedDict({1: 2, 3: 4}),
+        collections.Counter("count this"),
+    ],
+)
 def test_mapping_expected(value):
     with raises(TypeError, match="cannot make unordered comparisons to mapping"):
         unordered(value)
@@ -144,10 +147,12 @@ def test_fail_nonunique_left(testdir):
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
-    result.stdout.fnmatch_lines([
-        "E         Extra items in the left sequence:",
-        "E         3",
-    ])
+    result.stdout.fnmatch_lines(
+        [
+            "E         Extra items in the left sequence:",
+            "E         3",
+        ]
+    )
 
 
 def test_fail_nonunique_right(testdir):
@@ -161,10 +166,12 @@ def test_fail_nonunique_right(testdir):
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
-    result.stdout.fnmatch_lines([
-        "E         Extra items in the right sequence:",
-        "E         3"
-    ])
+    result.stdout.fnmatch_lines(
+        [
+            "E         Extra items in the right sequence:",
+            "E         3",
+        ]
+    )
 
 
 def test_replace(testdir):
@@ -178,12 +185,14 @@ def test_replace(testdir):
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
-    result.stdout.fnmatch_lines([
-        "E         One item replaced:",
-        "E         Omitting 1 identical items, use -vv to show",
-        "E         Differing items:",
-        "E         {'a': 1} != {'a': 3}",
-    ])
+    result.stdout.fnmatch_lines(
+        [
+            "E         One item replaced:",
+            "E         Omitting 1 identical items, use -vv to show",
+            "E         Differing items:",
+            "E         {'a': 1} != {'a': 3}",
+        ]
+    )
 
 
 def test_in(testdir):
@@ -197,10 +206,12 @@ def test_in(testdir):
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
-    result.stdout.fnmatch_lines([
-        "E       assert 1 in [2, 3]",
-        "E        +  where [2, 3] = unordered(2, 3)",
-    ])
+    result.stdout.fnmatch_lines(
+        [
+            "E       assert 1 in [2, 3]",
+            "E        +  where [2, 3] = unordered(2, 3)",
+        ]
+    )
 
 
 def test_type_check(testdir):
@@ -214,7 +225,9 @@ def test_type_check(testdir):
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1, passed=0)
-    result.stdout.fnmatch_lines([
-        "E         Type mismatch:",
-        "E         <class 'list'> != <class 'tuple'>",
-    ])
+    result.stdout.fnmatch_lines(
+        [
+            "E         Type mismatch:",
+            "E         <class 'list'> != <class 'tuple'>",
+        ]
+    )
