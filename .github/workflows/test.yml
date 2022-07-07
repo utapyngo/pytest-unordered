@@ -40,9 +40,9 @@ jobs:
       with:
         python-version: '3.x'
     - name: Install dependencies
-      run: python -m pip install mypy .
+      run: python -m pip install mypy types-setuptools .
     - name: mypy
-      run: mypy pytest_unordered.py
+      run: mypy pytest_unordered.py setup.py tests
 
   test:
     strategy:
@@ -54,6 +54,11 @@ jobs:
           - "3.8"
           - "3.7"
           - "pypy3.9"
+        pytest-version:
+          - "pytest<7"
+          - "pytest<8"
+          - "pytest"
+          - "git+https://github.com/pytest-dev/pytest.git@main"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -62,11 +67,9 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "${{ matrix.python-version }}"
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install tox pytest-cov .
+      run: python -m pip install tox "${{ matrix.pytest-version }}" pytest-cov .
     - name: Test
       run: |
         coverage run --branch --source=pytest_unordered -m pytest tests/
