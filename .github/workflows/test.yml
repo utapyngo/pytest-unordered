@@ -42,7 +42,7 @@ jobs:
     - name: Install dependencies
       run: python -m pip install mypy types-setuptools .
     - name: mypy
-      run: mypy pytest_unordered/ setup.py tests
+      run: mypy .
 
   test:
     strategy:
