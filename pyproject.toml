@@ -1,3 +1,15 @@
 [tool.black]
 line-length = 100
 target-version = ['py37']
+
+[tool.mypy]
+disallow_untyped_defs = 1
+exclude = [
+  '\.eggs',
+  '\.git',
+  '\.pytest_cache',
+  '\.tox',
+  'build',
+  'dist',
+  'venv',
+]

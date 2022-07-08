@@ -1,6 +1,6 @@
 # pytest-unordered: Test collection content, ignoring order
 
-[![Build Status](https://travis-ci.org/utapyngo/pytest-unordered.svg?branch=master)](https://travis-ci.org/utapyngo/pytest-unordered)
+[![Build Status](https://github.com/utapyngo/pytest-unordered/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/utapyngo/pytest-unordered/actions/workflows/test.yml?query=branch%3Amaster)
 [![Coverage Status](https://codecov.io/gh/utapyngo/pytest-unordered/branch/master/graph/badge.svg)](https://codecov.io/gh/utapyngo/pytest-unordered)
 
 `pytest_unordered` allows you to write simple (pytest) assertions
