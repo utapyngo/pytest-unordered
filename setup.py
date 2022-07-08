@@ -14,7 +14,7 @@ def read(fname: str) -> str:
 
 setup(
     name="pytest-unordered",
-    version="0.5.0",
+    version="0.5.1",
     author="Ivan Zaikin",
     author_email="ut@pyngo.tom.ru",
     maintainer="Ivan Zaikin",
@@ -24,7 +24,7 @@ setup(
     description="Test equality of unordered collections in pytest",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
-    py_modules=["pytest_unordered"],
+    packages=["pytest_unordered"],
     package_data={"pytest_unordered": ["py.typed"]},
     install_requires=["pytest>=6.0.0"],
     classifiers=[
@@ -32,9 +32,7 @@ setup(
         "Framework :: Pytest",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
-        "Operating System :: POSIX",
+        "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3 :: Only",
@@ -42,11 +40,12 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Testing",
         "Topic :: Software Development :: Quality Assurance",
         "Topic :: Utilities",
-        "License :: OSI Approved :: MIT License",
+        "Typing :: Typed",
     ],
     entry_points={"pytest11": ["unordered = pytest_unordered"]},
 )

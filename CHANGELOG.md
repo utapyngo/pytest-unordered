@@ -1,9 +1,12 @@
 # Changelog
 
+## [0.5.1] - 2022-07-08
+- Convert to a package
+- Add `py.typed` so type checkers can use the type hints
+
 ## [0.5.0] - 2022-07-07
 - Drop Python 3.6 support
 - Improve type hints
-- Add `py.typed` so type checkers can use the type hints
 
 
 ## [0.4.1] - 2021-03-28
