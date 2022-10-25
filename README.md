@@ -2,12 +2,46 @@
 
 [![Build Status](https://github.com/utapyngo/pytest-unordered/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/utapyngo/pytest-unordered/actions/workflows/test.yml?query=branch%3Amaster)
 [![Coverage Status](https://codecov.io/gh/utapyngo/pytest-unordered/branch/master/graph/badge.svg)](https://codecov.io/gh/utapyngo/pytest-unordered)
+![Language](https://img.shields.io/github/languages/top/utapyngo/pytest-unordered)
+[![Python Compatibility](https://img.shields.io/pypi/pyversions/pytest-unordered)](https://pypi.python.org/pypi/pytest-unordered)
+[![PyPI](https://img.shields.io/pypi/v/pytest-unordered?color=rgb%2852%2C%20208%2C%2088%29)](https://pypi.org/project/pytest-unordered/)
+
 
 `pytest_unordered` allows you to write simple (pytest) assertions
 to test whether collections have the same content, regardless of order.
 For example:
 
     assert [1, 20, 300] == unordered([20, 300, 1])
+
+
+It is especially useful when testing APIs that return some complex data structures 
+in an arbitrary order, e.g.:
+
+    assert response.json() == {
+        "people": unordered(
+            # Here we test that the collection type is list
+            [
+                {
+                    "name": "Alice",
+                    "age": 20,
+                    "children": unordered(
+                        # Here the collection type is not important
+                        {"name": "Bob", "age": 2}, 
+                        {"name": "Carol", "age": 3},
+                    ),
+                },
+                {
+                    "name": "Dave",
+                    "age": 30,
+                    "children": unordered(
+                        {"name": "Eve", "age": 5}, 
+                        {"name": "Frank", "age": 6},
+                    ),
+                },
+            ]
+        ),
+    }
+
 
 
 ## Installation
@@ -102,3 +136,10 @@ a container as single argument):
 This pattern also allows comparing with iterators, generators and alike:
 
     assert iter([1, 20, 300]) == unordered(20, 300, 1)  # Pass
+    assert unordered(i for i in range(3)) == [2, 1, 0]  # Pass
+
+If you want to enforce type checking when passing a single generator expression,
+pass `check_type=True`:
+
+    assert unordered((i for i in range(3)), check_type=True) == [2, 1, 0]  # Fail
+    assert unordered((i for i in range(3)), check_type=True) == (i for i in range(2, -1, -1))  # Pass
