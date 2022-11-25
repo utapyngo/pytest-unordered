@@ -30,11 +30,32 @@ class UnorderedList(list):
         actual_list = list(actual)
         if len(actual_list) != len(self):
             return False
-        extra_left, extra_right = _compare_eq_unordered(self, actual_list)
+        extra_left, extra_right = self.compare_to(actual_list)
         return not extra_left and not extra_right
 
     def __ne__(self, actual: object) -> bool:
         return not (self == actual)
+
+    def compare_to(self, other: List) -> Tuple[List, List]:
+        extra_left = list(self)
+        extra_right = []
+        reordered = []
+        placeholder = object()
+        for elem in other:
+            try:
+                extra_left.remove(elem)
+                reordered.append(elem)
+            except ValueError:
+                extra_right.append(elem)
+                reordered.append(placeholder)
+        placeholder_fillers = extra_left.copy()
+        for i, elem in reversed(list(enumerate(reordered))):
+            if not placeholder_fillers:
+                break
+            if elem == placeholder:
+                reordered[i] = placeholder_fillers.pop()
+        self[:] = [e for e in reordered if e is not placeholder]
+        return extra_left, extra_right
 
 
 def unordered(*args: Any, check_type: Optional[bool] = None) -> UnorderedList:
