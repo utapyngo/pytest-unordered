@@ -238,3 +238,9 @@ def test_type_check(pytester: Pytester) -> None:
             "E         <class 'list'> != <class 'tuple'>",
         ]
     )
+
+
+def test_reorder_on_eq() -> None:
+    unordered_list = unordered([1, 2, 3])
+    assert unordered_list == [3, 1, 2]
+    assert list(unordered_list) == [3, 1, 2]
