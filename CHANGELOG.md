@@ -1,8 +1,14 @@
 # Changelog
 
+
+## [0.5.2] - 2022-11-28
+- Reorder items on __eq__ for better diff 
+
+
 ## [0.5.1] - 2022-07-08
 - Convert to a package
 - Add `py.typed` so type checkers can use the type hints
+
 
 ## [0.5.0] - 2022-07-07
 - Drop Python 3.6 support
