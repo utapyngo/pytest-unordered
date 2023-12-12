@@ -59,7 +59,6 @@ jobs:
           - "pytest<7"
           - "pytest<8"
           - "pytest"
-          - "git+https://github.com/pytest-dev/pytest.git@main"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
