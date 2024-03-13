@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [0.6.0] - 2024-03-13
+- Add Pytest 8 support
+- Add Python 3.12 support
+- Drop Pytest 6 support
+- Drop Python 3.7 support
+
+
 ## [0.5.2] - 2022-11-28
 - Reorder items on __eq__ for better diff 
 

@@ -6,6 +6,7 @@ from typing import Mapping
 from typing import Optional
 from typing import Tuple
 
+import pytest
 from _pytest._io.saferepr import saferepr
 from _pytest.assertion.util import _compare_eq_any
 from _pytest.config import Config
@@ -93,7 +94,19 @@ def pytest_assertrepr_compare(
         extra_left, extra_right = _compare_eq_unordered(left, right)
         if len(extra_left) == 1 and len(extra_right) == 1:
             result.append("One item replaced:")
-            result.extend(_compare_eq_any(extra_left[0], extra_right[0], verbose))
+            if pytest.version_tuple < (8, 0, 0):
+                result.extend(
+                    _compare_eq_any(extra_left[0], extra_right[0], verbose=verbose)  # type: ignore
+                )
+            else:
+                result.extend(
+                    _compare_eq_any(
+                        extra_left[0],
+                        extra_right[0],
+                        highlighter=config.get_terminal_writer()._highlight,
+                        verbose=verbose,
+                    )
+                )
         else:
             if extra_left:
                 result.append("Extra items in the left sequence:")
