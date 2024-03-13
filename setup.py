@@ -14,7 +14,7 @@ def read(fname: str) -> str:
 
 setup(
     name="pytest-unordered",
-    version="0.5.2",
+    version="0.6.0",
     author="Ivan Zaikin",
     author_email="ut@pyngo.tom.ru",
     maintainer="Ivan Zaikin",
@@ -26,7 +26,7 @@ setup(
     long_description_content_type="text/markdown",
     packages=["pytest_unordered"],
     package_data={"pytest_unordered": ["py.typed"]},
-    install_requires=["pytest>=6.0.0"],
+    install_requires=["pytest>=7.0.0"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Pytest",
