@@ -45,9 +45,7 @@ class UnorderedList(list):
         for elem in other:
             try:
                 i = extra_left.index(elem)
-                matched_element = extra_left[i]
-                del extra_left[i]
-                reordered.append(matched_element)
+                reordered.append(extra_left.pop(i))
             except ValueError:
                 extra_right.append(elem)
                 reordered.append(placeholder)
