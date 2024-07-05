@@ -3,6 +3,7 @@
 
 ## [0.6.1] - 2024-07-05
 - Fix matching with `mock.ANY` (#16)
+- Add Python 3.13 support
 
 
 ## [0.6.0] - 2024-03-13
