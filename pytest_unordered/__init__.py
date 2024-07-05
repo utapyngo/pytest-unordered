@@ -44,8 +44,10 @@ class UnorderedList(list):
         placeholder = object()
         for elem in other:
             try:
-                extra_left.remove(elem)
-                reordered.append(elem)
+                i = extra_left.index(elem)
+                matched_element = extra_left[i]
+                del extra_left[i]
+                reordered.append(matched_element)
             except ValueError:
                 extra_right.append(elem)
                 reordered.append(placeholder)

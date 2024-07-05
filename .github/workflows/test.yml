@@ -40,7 +40,7 @@ jobs:
       with:
         python-version: '3.x'
     - name: Install dependencies
-      run: python -m pip install mypy types-setuptools .
+      run: python -m pip install mypy types-mock types-setuptools .
     - name: mypy
       run: mypy .
 
@@ -70,7 +70,7 @@ jobs:
       with:
         python-version: "${{ matrix.python-version }}"
     - name: Install dependencies
-      run: python -m pip install tox "${{ matrix.pytest-version }}" pytest-cov .
+      run: python -m pip install mock tox "${{ matrix.pytest-version }}" pytest-cov .
     - name: Test
       run: |
         coverage run --branch --source=pytest_unordered -m pytest tests/

@@ -14,7 +14,7 @@ def read(fname: str) -> str:
 
 setup(
     name="pytest-unordered",
-    version="0.6.0",
+    version="0.6.1",
     author="Ivan Zaikin",
     author_email="ut@pyngo.tom.ru",
     maintainer="Ivan Zaikin",

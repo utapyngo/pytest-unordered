@@ -8,6 +8,7 @@ import pytest
 from _pytest.pytester import Pytester
 from pytest import raises
 
+from mock import ANY
 from pytest_unordered import UnorderedList
 from pytest_unordered import _compare_eq_unordered
 from pytest_unordered import unordered
@@ -244,3 +245,13 @@ def test_reorder_on_eq() -> None:
     unordered_list = unordered([1, 2, 3])
     assert unordered_list == [3, 1, 2]
     assert list(unordered_list) == [3, 1, 2]
+
+
+def test_mock_any() -> None:
+    p_unordered = {"results": unordered({"foo1": ANY}, {"foo2": ANY})}
+    test_1 = {"results": [{"foo1": "value10"}, {"foo2": "value20"}]}
+    test_2 = {"results": [{"foo1": "value11"}, {"foo2": "value21"}]}
+    test_3 = {"results": [{"foo1": "value10"}, {"foo2": "value20"}]}
+    assert p_unordered == test_1
+    assert p_unordered == test_2
+    assert p_unordered == test_3

@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [0.6.1] - 2024-07-05
+- Fix matching with `mock.ANY` (#16)
+
+
 ## [0.6.0] - 2024-03-13
 - Add Pytest 8 support
 - Add Python 3.12 support
