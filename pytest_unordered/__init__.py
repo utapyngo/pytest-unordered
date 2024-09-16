@@ -67,6 +67,14 @@ def unordered(*args: Any, check_type: Optional[bool] = None) -> UnorderedList:
     return UnorderedList(args, check_type=False)
 
 
+def unordered_deep(obj: Any) -> Any:
+    if isinstance(obj, dict):
+        return dict((k, unordered_deep(v)) for k, v in obj.items())
+    if isinstance(obj, list) or isinstance(obj, tuple):
+        return unordered((unordered_deep(x) for x in obj))
+    return obj
+
+
 def _compare_eq_unordered(left: Iterable, right: Iterable) -> Tuple[List, List]:
     extra_left = []
     extra_right = list(right)
