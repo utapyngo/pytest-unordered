@@ -11,7 +11,8 @@ from pytest import raises
 from mock import ANY
 from pytest_unordered import UnorderedList
 from pytest_unordered import _compare_eq_unordered
-from pytest_unordered import unordered, unordered_deep
+from pytest_unordered import unordered
+from pytest_unordered import unordered_deep
 
 
 @pytest.mark.parametrize(
