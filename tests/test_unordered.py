@@ -12,6 +12,7 @@ from mock import ANY
 from pytest_unordered import UnorderedList
 from pytest_unordered import _compare_eq_unordered
 from pytest_unordered import unordered
+from pytest_unordered import unordered_deep
 
 
 @pytest.mark.parametrize(
@@ -255,3 +256,21 @@ def test_mock_any() -> None:
     assert p_unordered == test_1
     assert p_unordered == test_2
     assert p_unordered == test_3
+
+
+@pytest.mark.parametrize(
+    ["expected", "actual"],
+    [
+        (unordered_deep([1, 2, 3]), [3, 2, 1]),
+        (unordered_deep((1, 2, 3)), (3, 2, 1)),
+        (unordered_deep({1, 2, 3}), {3, 2, 1}),
+        (unordered_deep([1, 2, {"a": (4, 5, 6)}]), [{"a": [6, 5, 4]}, 2, 1]),  # fmt: skip
+        (unordered_deep([{1: (["a", "b"])}, 2, 3]), [3, 2, {1: ["b", "a"]}]),  # fmt: skip
+        (unordered_deep(("a", "b", "c")), ["b", "a", "c"]),
+    ],
+)
+def test_unordered_deep(expected: UnorderedList, actual: Iterable) -> None:
+    assert expected == actual
+    assert actual == expected
+    assert not (expected != actual)
+    assert not (actual != expected)
