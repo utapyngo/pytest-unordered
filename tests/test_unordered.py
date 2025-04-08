@@ -3,12 +3,12 @@ from typing import Any
 from typing import Iterable
 from typing import List
 from typing import Mapping
+from unittest.mock import ANY
 
 import pytest
 from _pytest.pytester import Pytester
 from pytest import raises
 
-from mock import ANY
 from pytest_unordered import UnorderedList
 from pytest_unordered import _compare_eq_unordered
 from pytest_unordered import unordered
