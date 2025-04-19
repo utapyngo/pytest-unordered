@@ -1,30 +1,34 @@
+from __future__ import annotations
+
+from collections.abc import Generator
+from collections.abc import Iterable
+from collections.abc import Mapping
+from typing import TYPE_CHECKING
 from typing import Any
-from typing import Generator
-from typing import Iterable
-from typing import List
-from typing import Mapping
-from typing import Optional
-from typing import Tuple
 
 import pytest
 from _pytest._io.saferepr import saferepr
 from _pytest.assertion.util import _compare_eq_any
-from _pytest.config import Config
+
+if TYPE_CHECKING:
+    from _pytest.config import Config
 
 
 class UnorderedList(list):
-    def __init__(self, expected: Iterable, check_type: bool = True):
+    def __init__(self, expected: Iterable, *, check_type: bool = True) -> None:
         if not isinstance(expected, Iterable):
+            msg = f"cannot make unordered comparisons to non-iterable: {expected!r}"
             raise TypeError(
-                "cannot make unordered comparisons to non-iterable: {!r}".format(expected)
+                msg,
             )
         if isinstance(expected, Mapping):
-            raise TypeError("cannot make unordered comparisons to mapping: {!r}".format(expected))
+            msg = f"cannot make unordered comparisons to mapping: {expected!r}"
+            raise TypeError(msg)
         super().__init__(expected)
-        self._expected_type = type(expected) if check_type else None
+        self.expected_type = type(expected) if check_type else None
 
     def __eq__(self, actual: object) -> bool:
-        if self._expected_type is not None and self._expected_type != type(actual):
+        if self.expected_type is not None and self.expected_type is not type(actual):
             return False
         if not isinstance(actual, Iterable):
             return self.copy() == actual
@@ -37,16 +41,16 @@ class UnorderedList(list):
     def __ne__(self, actual: object) -> bool:
         return not (self == actual)
 
-    def compare_to(self, other: List) -> Tuple[List, List]:
+    def compare_to(self, other: list) -> tuple[list, list]:
         extra_left = list(self)
-        extra_right = []
-        reordered = []
+        extra_right: list[Any] = []
+        reordered: list[Any] = []
         placeholder = object()
         for elem in other:
-            try:
+            if elem in extra_left:
                 i = extra_left.index(elem)
                 reordered.append(extra_left.pop(i))
-            except ValueError:
+            else:
                 extra_right.append(elem)
                 reordered.append(placeholder)
         placeholder_fillers = extra_left.copy()
@@ -59,7 +63,7 @@ class UnorderedList(list):
         return extra_left, extra_right
 
 
-def unordered(*args: Any, check_type: Optional[bool] = None) -> UnorderedList:
+def unordered(*args: Any, check_type: bool | None = None) -> UnorderedList:
     if len(args) == 1:
         if check_type is None:
             check_type = not isinstance(args[0], Generator)
@@ -69,60 +73,61 @@ def unordered(*args: Any, check_type: Optional[bool] = None) -> UnorderedList:
 
 def unordered_deep(obj: Any) -> Any:
     if isinstance(obj, dict):
-        return dict((k, unordered_deep(v)) for k, v in obj.items())
-    if isinstance(obj, list) or isinstance(obj, tuple):
-        return unordered((unordered_deep(x) for x in obj))
+        return {k: unordered_deep(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return unordered(unordered_deep(x) for x in obj)
     return obj
 
 
-def _compare_eq_unordered(left: Iterable, right: Iterable) -> Tuple[List, List]:
-    extra_left = []
+def _compare_eq_unordered(left: Iterable, right: Iterable) -> tuple[list, list]:
+    extra_left: list[Any] = []
     extra_right = list(right)
     for elem in left:
-        try:
+        if elem in extra_right:
             extra_right.remove(elem)
-        except ValueError:
+        else:
             extra_left.append(elem)
     return extra_left, extra_right
 
 
 def pytest_assertrepr_compare(
-    config: Config, op: str, left: Any, right: Any
-) -> Optional[List[str]]:
+    config: Config,
+    op: str,
+    left: Any,
+    right: Any,
+) -> list[str] | None:
     if (isinstance(left, UnorderedList) or isinstance(right, UnorderedList)) and op == "==":
         verbose = config.getoption("verbose")
         left_repr = saferepr(left)
         right_repr = saferepr(right)
-        result = ["{} {} {}".format(left_repr, op, right_repr)]
-        left_type = left._expected_type if isinstance(left, UnorderedList) else type(left)
-        right_type = right._expected_type if isinstance(right, UnorderedList) else type(right)
+        result = [f"{left_repr} {op} {right_repr}"]
+        left_type = left.expected_type if isinstance(left, UnorderedList) else type(left)
+        right_type = right.expected_type if isinstance(right, UnorderedList) else type(right)
         if left_type and right_type and left_type != right_type:
             result.append("Type mismatch:")
-            result.append("{} != {}".format(left_type, right_type))
+            result.append(f"{left_type} != {right_type}")
         extra_left, extra_right = _compare_eq_unordered(left, right)
         if len(extra_left) == 1 and len(extra_right) == 1:
             result.append("One item replaced:")
-            if pytest.version_tuple < (8, 0, 0):
+            if pytest.version_tuple < (8, 0, 0):  # pragma: no cover
                 result.extend(
-                    _compare_eq_any(extra_left[0], extra_right[0], verbose=verbose)  # type: ignore
+                    _compare_eq_any(extra_left[0], extra_right[0], verbose=verbose),  # type: ignore[call-arg]
                 )
             else:
                 result.extend(
                     _compare_eq_any(
                         extra_left[0],
                         extra_right[0],
-                        highlighter=config.get_terminal_writer()._highlight,
+                        highlighter=config.get_terminal_writer()._highlight,  # noqa: SLF001
                         verbose=verbose,
-                    )
+                    ),
                 )
         else:
             if extra_left:
                 result.append("Extra items in the left sequence:")
-                for item in extra_left:
-                    result.append(saferepr(item))
+                result.extend(saferepr(item) for item in extra_left)
             if extra_right:
                 result.append("Extra items in the right sequence:")
-                for item in extra_right:
-                    result.append(saferepr(item))
+                result.extend(saferepr(item) for item in extra_right)
         return result
     return None

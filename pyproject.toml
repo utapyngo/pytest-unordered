@@ -1,9 +1,36 @@
-[tool.black]
+[tool.ruff]
 line-length = 100
-target-version = ['py37']
+target-version = "py38"
+exclude =[
+    "__pycache__",
+    ".git",
+    ".venv*/*",
+    "venv*/*",
+    "*/site-packages/*",
+]
+
+[tool.ruff.format]
+indent-style = "space"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
+  "COM812",  # missing-trailing-comma: May conflict with the formatter 
+  "D",       # pydocstyle
+  "Q",       # flake8-quotes (may conflict with the formatter)
+  "PLR2004", # Magic value used in comparison, consider replacing with a constant variable
+  "S101",    # Use of `assert` detected
+  "SIM201",  # negate-equal-op
+  "SIM202",  # negate-not-equal-op
+  "UP038",   # non-pep604-isinstance: This rule is deprecated
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
 
 [tool.mypy]
-disallow_untyped_defs = 1
+disallow_untyped_defs = true
 exclude = [
   '\.eggs',
   '\.git',

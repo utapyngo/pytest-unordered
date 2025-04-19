@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [0.7.0]
+- Add Python 3.13 support
+- Add deep unordered for nested data structures (#17)
+- Switch to ruff for linting and formatting
+
 ## [0.6.1] - 2024-07-05
 - Fix matching with `mock.ANY` (#16)
 
