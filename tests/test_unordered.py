@@ -1,22 +1,26 @@
+from __future__ import annotations
+
 import collections
+from typing import TYPE_CHECKING
 from typing import Any
-from typing import Iterable
-from typing import List
-from typing import Mapping
 from unittest.mock import ANY
 
 import pytest
-from _pytest.pytester import Pytester
-from pytest import raises
 
 from pytest_unordered import UnorderedList
 from pytest_unordered import _compare_eq_unordered
 from pytest_unordered import unordered
 from pytest_unordered import unordered_deep
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+    from collections.abc import Mapping
+
+    from _pytest.pytester import Pytester
+
 
 @pytest.mark.parametrize(
-    ["expected", "actual"],
+    ("expected", "actual"),
     [
         (unordered(1, 2, 3), [3, 2, 1]),
         (unordered(1, 2, 3), (3, 2, 1)),
@@ -43,7 +47,7 @@ def test_unordered(expected: UnorderedList, actual: Iterable) -> None:
 
 
 @pytest.mark.parametrize(
-    ["left", "right"],
+    ("left", "right"),
     [
         (unordered(2, 1, 0), (x for x in range(3))),
         ((x for x in range(3)), unordered(2, 1, 0)),
@@ -60,7 +64,7 @@ def test_unordered_generators(left: Iterable, right: Iterable) -> None:
 
 
 @pytest.mark.parametrize(
-    ["expected", "actual"],
+    ("expected", "actual"),
     [
         (unordered([1, 2, 3]), [1, 2, 3, 4]),
         (unordered([1, 2, 3]), [1, 2, 3, 1]),
@@ -90,7 +94,7 @@ def test_unordered_reject(expected: UnorderedList, actual: Iterable) -> None:
 
 @pytest.mark.parametrize("value", [None, True, 42, object(), type, TypeError])
 def test_non_sized_expected(value: Any) -> None:
-    with raises(TypeError, match="cannot make unordered comparisons to non-iterable"):
+    with pytest.raises(TypeError, match="cannot make unordered comparisons to non-iterable"):
         UnorderedList(value)
 
 
@@ -110,7 +114,7 @@ def test_non_iterable_actual(value: Any) -> None:
     ],
 )
 def test_mapping_expected(value: Mapping) -> None:
-    with raises(TypeError, match="cannot make unordered comparisons to mapping"):
+    with pytest.raises(TypeError, match="cannot make unordered comparisons to mapping"):
         unordered(value)
 
 
@@ -127,7 +131,7 @@ def test_check_type() -> None:
 
 
 @pytest.mark.parametrize(
-    "left,right,extra_left,extra_right",
+    ("left", "right", "extra_left", "extra_right"),
     [
         ([1, 2, 3], [1, 2, 3, 4, 5], [], [4, 5]),
         ([3, 2, 1], [1, 2, 3, 4, 5], [], [4, 5]),
@@ -136,7 +140,10 @@ def test_check_type() -> None:
     ],
 )
 def test_compare_eq_unordered(
-    left: Iterable, right: Iterable, extra_left: List, extra_right: List
+    left: Iterable,
+    right: Iterable,
+    extra_left: list,
+    extra_right: list,
 ) -> None:
     assert _compare_eq_unordered(left, right) == (extra_left, extra_right)
 
@@ -152,7 +159,7 @@ def test_fail_nonunique_left(pytester: Pytester) -> None:
 
         def test_unordered():
             assert unordered(1, 2, 3, 3) == [1, 2, 3]
-        """
+        """,
     )
     result = pytester.runpytest()
     result.assert_outcomes(failed=1, passed=0)
@@ -160,7 +167,7 @@ def test_fail_nonunique_left(pytester: Pytester) -> None:
         [
             "E         Extra items in the left sequence:",
             "E         3",
-        ]
+        ],
     )
 
 
@@ -171,7 +178,7 @@ def test_fail_nonunique_right(pytester: Pytester) -> None:
 
         def test_unordered():
             assert [1, 2, 3] == unordered(1, 2, 3, 3)
-        """
+        """,
     )
     result = pytester.runpytest()
     result.assert_outcomes(failed=1, passed=0)
@@ -179,7 +186,7 @@ def test_fail_nonunique_right(pytester: Pytester) -> None:
         [
             "E         Extra items in the right sequence:",
             "E         3",
-        ]
+        ],
     )
 
 
@@ -190,7 +197,7 @@ def test_replace(pytester: Pytester) -> None:
 
         def test_unordered():
             assert [{"a": 1, "b": 2}, 2, 3] == unordered(2, 3, {"b": 2, "a": 3})
-        """
+        """,
     )
     result = pytester.runpytest()
     result.assert_outcomes(failed=1, passed=0)
@@ -200,7 +207,7 @@ def test_replace(pytester: Pytester) -> None:
             "E         Omitting 1 identical items, use -vv to show",
             "E         Differing items:",
             "E         {'a': 1} != {'a': 3}",
-        ]
+        ],
     )
 
 
@@ -211,7 +218,7 @@ def test_in(pytester: Pytester) -> None:
 
         def test_unordered():
             assert 1 in unordered(2, 3)
-        """
+        """,
     )
     result = pytester.runpytest()
     result.assert_outcomes(failed=1, passed=0)
@@ -219,7 +226,7 @@ def test_in(pytester: Pytester) -> None:
         [
             "E       assert 1 in [2, 3]",
             "E        +  where [2, 3] = unordered(2, 3)",
-        ]
+        ],
     )
 
 
@@ -230,7 +237,7 @@ def test_type_check(pytester: Pytester) -> None:
 
         def test_unordered():
             assert [3, 2, 1] == unordered((1, 2, 3))
-        """
+        """,
     )
     result = pytester.runpytest()
     result.assert_outcomes(failed=1, passed=0)
@@ -238,7 +245,7 @@ def test_type_check(pytester: Pytester) -> None:
         [
             "E         Type mismatch:",
             "E         <class 'list'> != <class 'tuple'>",
-        ]
+        ],
     )
 
 
@@ -259,7 +266,7 @@ def test_mock_any() -> None:
 
 
 @pytest.mark.parametrize(
-    ["expected", "actual"],
+    ("expected", "actual"),
     [
         (unordered_deep([1, 2, 3]), [3, 2, 1]),
         (unordered_deep((1, 2, 3)), (3, 2, 1)),
