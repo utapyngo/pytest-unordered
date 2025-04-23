@@ -1,15 +1,12 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-import codecs
-import os
+from pathlib import Path
 
 from setuptools import setup
 
 
 def read(fname: str) -> str:
-    file_path = os.path.join(os.path.dirname(__file__), fname)
-    return codecs.open(file_path, encoding="utf-8").read()
+    return (Path(__file__).parent / fname).read_text(encoding="utf-8")
 
 
 setup(
