@@ -1,7 +1,7 @@
 # Changelog
 
 
-## [0.7.0]
+## [0.7.0] - 2025-06-03
 - Add Python 3.13 support
 - Add deep unordered for nested data structures (#17)
 - Switch to ruff for linting and formatting
