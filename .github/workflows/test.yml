@@ -41,7 +41,11 @@ jobs:
         exclude:
           - python-version: "3.8"
             pytest-version: "git+https://github.com/pytest-dev/pytest.git@main"
+          - python-version: "3.9"
+            pytest-version: "git+https://github.com/pytest-dev/pytest.git@main"
           - python-version: "pypy3.8"
+            pytest-version: "git+https://github.com/pytest-dev/pytest.git@main"
+          - python-version: "pypy3.9"
             pytest-version: "git+https://github.com/pytest-dev/pytest.git@main"
     runs-on: ubuntu-latest
     steps:
