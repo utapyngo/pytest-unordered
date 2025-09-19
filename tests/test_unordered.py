@@ -271,8 +271,8 @@ def test_mock_any() -> None:
         (unordered_deep([1, 2, 3]), [3, 2, 1]),
         (unordered_deep((1, 2, 3)), (3, 2, 1)),
         (unordered_deep({1, 2, 3}), {3, 2, 1}),
-        (unordered_deep([1, 2, {"a": (4, 5, 6)}]), [{"a": [6, 5, 4]}, 2, 1]),  # fmt: skip
-        (unordered_deep([{1: (["a", "b"])}, 2, 3]), [3, 2, {1: ["b", "a"]}]),  # fmt: skip
+        (unordered_deep([1, 2, {"a": (4, 5, 6)}]), [{"a": [6, 5, 4]}, 2, 1]),
+        (unordered_deep([{1: (["a", "b"])}, 2, 3]), [3, 2, {1: ["b", "a"]}]),
         (unordered_deep(("a", "b", "c")), ["b", "a", "c"]),
     ],
 )

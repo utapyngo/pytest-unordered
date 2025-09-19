@@ -23,7 +23,6 @@ ignore = [
   "S101",    # Use of `assert` detected
   "SIM201",  # negate-equal-op
   "SIM202",  # negate-not-equal-op
-  "UP038",   # non-pep604-isinstance: This rule is deprecated
 ]
 
 [tool.ruff.lint.isort]

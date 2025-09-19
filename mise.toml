@@ -1,0 +1,14 @@
+[hooks]
+enter = "mise install"
+
+[env]
+VENV = ".venv"
+_.python.venv = { path = "{{env.VENV}}", create = true }
+UV_PROJECT_ENVIRONMENT = "{{env.VENV}}"
+
+[tools]
+python = "3.10"
+prek = "latest"
+
+[tasks.lint]
+run = "prek run --all-files"

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from _pytest.config import Config
 
 
-class UnorderedList(list):
+class UnorderedList(list):  # noqa: PLW1641
     def __init__(self, expected: Iterable, *, check_type: bool = True) -> None:
         if not isinstance(expected, Iterable):
             msg = f"cannot make unordered comparisons to non-iterable: {expected!r}"
