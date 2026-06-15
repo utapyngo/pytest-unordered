@@ -31,6 +31,7 @@ jobs:
         pytest-version:
           - "pytest<8"
           - "pytest<9"
+          - "pytest<10"
           - "pytest"
           - "git+https://github.com/pytest-dev/pytest.git@main"
         exclude:

@@ -114,12 +114,16 @@ def pytest_assertrepr_compare(
                     _compare_eq_any(extra_left[0], extra_right[0], verbose=verbose),  # type: ignore[call-arg]
                 )
             else:
+                args = {}
+                if pytest.version_tuple >= (9, 1, 0):
+                    args = {"assertion_text_diff_style": "ndiff"}
                 result.extend(
                     _compare_eq_any(
                         extra_left[0],
                         extra_right[0],
                         highlighter=config.get_terminal_writer()._highlight,  # noqa: SLF001
                         verbose=verbose,
+                        **args,
                     ),
                 )
         else:
