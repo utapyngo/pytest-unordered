@@ -8,8 +8,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v2
+      - uses: actions/checkout@v6
+      - uses: jdx/mise-action@v4
       - name: Lint
         run: mise lint
 
@@ -31,11 +31,11 @@ jobs:
           - "pypy3.11"
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 2
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: "${{ matrix.python-version }}"
     - name: Install dependencies
@@ -48,7 +48,7 @@ jobs:
         tox run -f "$tox_factor" --skip-missing-interpreters true
         coverage xml -o ./coverage.xml
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v7
       with:
         fail_ci_if_error: false
         files: ./coverage.xml
