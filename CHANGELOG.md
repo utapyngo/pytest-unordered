@@ -1,6 +1,17 @@
 # Changelog
 
 
+## [0.8.0] - 2026-06-16
+- Add Pytest 9 support
+- Add Python 3.14 support
+- Keep latest Pytest tests on supported Python versions
+- Refactor CI to use the tox test matrix
+- Replace pre-commit workflow with prek and mise
+- Add Context7 project metadata
+- Update linting tools
+- Update GitHub Actions versions
+
+
 ## [0.7.0] - 2025-06-03
 - Add Python 3.13 support
 - Add deep unordered for nested data structures (#17)
